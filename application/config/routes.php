@@ -59,6 +59,6 @@ $route['cart/delete/(:any)']      = 'transaction/delete/$1';
 $route['cart/update']             = 'transaction/update';
 $route['checkout']                = 'transaction/checkout';
 
-$route['default_controller']      = 'test';
+$route['default_controller']      = 'welcome';
 $route['404_override'] = '';
 $route['translate_uri_dashes'] = FALSE;
