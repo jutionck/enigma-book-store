@@ -19,40 +19,8 @@ $config['charset'] = 'UTF-8';
 
 $config['enable_hooks'] = FALSE;
 
-/*
-|--------------------------------------------------------------------------
-| Class Extension Prefix
-|--------------------------------------------------------------------------
-|
-| This item allows you to set the filename/classname prefix when extending
-| native libraries.  For more information please see the user guide:
-|
-| https://codeigniter.com/user_guide/general/core_classes.html
-| https://codeigniter.com/user_guide/general/creating_libraries.html
-|
-*/
 $config['subclass_prefix'] = 'MY_';
 
-/*
-|--------------------------------------------------------------------------
-| Composer auto-loading
-|--------------------------------------------------------------------------
-|
-| Enabling this setting will tell CodeIgniter to look for a Composer
-| package auto-loader script in application/vendor/autoload.php.
-|
-|	$config['composer_autoload'] = TRUE;
-|
-| Or if you have your vendor/ directory located somewhere else, you
-| can opt to set a specific path as well:
-|
-|	$config['composer_autoload'] = '/path/to/vendor/autoload.php';
-|
-| For more information about Composer, please visit http://getcomposer.org/
-|
-| Note: This will NOT disable or override the CodeIgniter-specific
-|	autoloading (application/config/autoload.php)
-*/
 $config['composer_autoload'] = FALSE;
 
 /*
@@ -241,7 +209,7 @@ $config['cache_query_string'] = FALSE;
 | https://codeigniter.com/user_guide/libraries/encryption.html
 |
 */
-$config['encryption_key'] = 'xWeQSDEraxvftnabsyeirytcnsaVBFSH856SNEbsgatw791';
+$config['encryption_key'] = '';
 
 /*
 |--------------------------------------------------------------------------
