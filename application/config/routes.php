@@ -54,10 +54,15 @@ $route['book']                    = 'book';
 $route['book/add_cart']           = 'book/cart';
 $route['book/detail/(:any)']      = 'book/detail/$1';
 
-$route['cart']                    = 'transaction';
-$route['cart/delete/(:any)']      = 'transaction/delete/$1';
-$route['cart/update']             = 'transaction/update';
-$route['checkout']                = 'transaction/checkout';
+$route['cart']                    = 'transaction_book';
+$route['cart/delete/(:any)']      = 'transaction_book/delete/$1';
+$route['cart/update']             = 'transaction_book/update';
+
+// day two
+$route['cart/clear']              = 'transaction_book/clear';
+$route['checkout']                = 'transaction_book/checkout';
+$route['checkout/process']        = 'transaction_book/checkoutProcess';
+$route['myorder']                 = 'transaction_book/myOrder';
 
 $route['default_controller']      = 'welcome';
 $route['404_override'] = '';

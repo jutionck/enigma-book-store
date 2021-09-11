@@ -9,7 +9,7 @@
 
   <div class="row">
     <?php foreach ($books as $book) : ?>
-      <div class="col-md-3">
+      <div class="col-lg-3">
         <form action="<?= site_url('book/add_cart') ?>" method="POST">
           <input type="hidden" name="id" value="<?= $book->id ?>">
           <input type="hidden" name="qty" value="1">

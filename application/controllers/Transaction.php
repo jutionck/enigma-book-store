@@ -1,51 +1,81 @@
-<?php
+<?php if ( ! defined('BASEPATH')) exit('No direct script access allowed');
 
-class Transaction extends CI_Controller
-{
+class Transaction extends CI_Controller {
 
-  public function __construct()
-  {
-    parent::__construct();
-    $this->load->model('Transaction_model', 'Transaction');
-  }
+	/**
+	 * Index Page for this controller.
+	 *
+	 * Maps to the following URL
+	 * 		http://example.com/index.php/welcome
+	 *	- or -  
+	 * 		http://example.com/index.php/welcome/index
+	 *	- or -
+	 * Since this controller is set as the default controller in 
+	 * config/routes.php, it's displayed at http://example.com/
+	 *
+	 * So any other public methods not prefixed with an underscore will
+	 * map to /index.php/welcome/<method_name>
+	 * @see http://codeigniter.com/user_guide/general/urls.html
+	 */
 
-  public function index()
-  {
-    $data = [
-      'title'   => 'Keranjang Belanja'
-    ];
-    $page = '/transaction/cart';
-    pageBackend('member', $page, $data);
-  }
 
-
-
-  public function checkout()
-  {
-    $data = [
-      'title'   => 'Pembayaran'
-    ];
-    $page = '/transaction/checkout';
-    pageBackend('member', $page, $data);
-  }
-
-  public function delete($rowId)
-  {
-    $this->cart->remove($rowId);
-    redirect('cart');
-  }
-
-  public function update()
-  {
-    $i = 1;
-    foreach ($this->cart->contents() as $items) {
-      $data = [
-        'rowid' => $items['rowid'],
-        'qty'   => $this->input->post($i . '[qty]')
-      ];
-      $this->cart->update($data);
-      $i++;
+	public function __construct()
+    {
+        parent::__construct();
+        $params = array('server_key' => 'your_server_key', 'production' => false);
+		$this->load->library('veritrans');
+		$this->veritrans->config($params);
+		$this->load->helper('url');
+		
     }
-    redirect('cart');
-  }
+
+    public function index()
+    {
+    	$this->load->view('transaction');
+    }
+
+    public function process()
+    {
+    	$order_id = $this->input->post('order_id');
+    	$action = $this->input->post('action');
+    	switch ($action) {
+		    case 'status':
+		        $this->status($order_id);
+		        break;
+		    case 'approve':
+		        $this->approve($order_id);
+		        break;
+		    case 'expire':
+		        $this->expire($order_id);
+		        break;
+		   	case 'cancel':
+		        $this->cancel($order_id);
+		        break;
+		}
+
+    }
+
+	public function status($order_id)
+	{
+		echo 'test get status </br>';
+		print_r ($this->veritrans->status($order_id) );
+	}
+
+	public function cancel($order_id)
+	{
+		echo 'test cancel trx </br>';
+		echo $this->veritrans->cancel($order_id);
+	}
+
+	public function approve($order_id)
+	{
+		echo 'test get approve </br>';
+		print_r ($this->veritrans->approve($order_id) );
+	}
+
+	public function expire($order_id)
+	{
+		echo 'test get expire </br>';
+		print_r ($this->veritrans->expire($order_id) );
+	}
 }
