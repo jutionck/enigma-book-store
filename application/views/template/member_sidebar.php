@@ -17,8 +17,13 @@
   </div>
   <li class="nav-item">
     <a class="nav-link" href="<?= site_url('book') ?>">
-      <i class="fas fa-fw fa-chart-area"></i>
-      <span>Book</span></a>
+      <i class="fas fa-fw fa-cart-plus"></i>
+      <span>Book</span>
+    </a>
+    <a class="nav-link" href="<?= site_url('orders') ?>">
+      <i class="fas fa-fw fa-shopping-cart"></i>
+      <span>My Order</span>
+    </a>
   </li>
   <hr class="sidebar-divider d-none d-md-block">
   <div class="text-center d-none d-md-inline">

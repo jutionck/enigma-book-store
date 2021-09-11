@@ -20,4 +20,8 @@ function pageBackend($role = '', $page = '', $data = '')
   $ci->load->view('template/topbar', $data);
   $ci->load->view('' . $page, $data);
   $ci->load->view('template/footer');
+
+
+  // strtolower($role . '_sidebar') -> _sidebar.php
+  // pageBackend('member') -> member_sidebar.php
 }

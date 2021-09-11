@@ -2,8 +2,8 @@
   <h1 class="h3 mb-4 text-gray-800"><?= $title ?></h1>
 
   <div class="row">
-    <div class="col-12 mb-4">
-      <img src="https://cdn.gramedia.com/uploads/marketing/Special_Offer_Oopredoo_Storefront__wauto_h336.png" class="img-fluid" alt="Responsive image">
+    <div class="col-lg-12 mb-4">
+      <img src="https://cdn.gramedia.com/uploads/marketing/Special_Offer_Oopredoo_Storefront__wauto_h336.png" class="mw-100" alt="Responsive image">
     </div>
   </div>
 

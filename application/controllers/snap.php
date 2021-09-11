@@ -27,6 +27,7 @@ class Snap extends CI_Controller
 		$this->load->library('midtrans');
 		$this->midtrans->config($params);
 		$this->load->helper('url');
+		$this->load->model('Transaction_model', 'Transaction');
 	}
 
 	public function index()
@@ -36,37 +37,53 @@ class Snap extends CI_Controller
 
 	public function token()
 	{
+		// get from checkout
+		$grossamount = $this->input->get('grossamount');
+		$cartByMember = $this->Transaction->getCartByMember(9)->result_array();
+		$member 			= $this->Transaction->getCartByMember(9)->row();
 
 		// Required
 		$transaction_details = array(
-			'order_id' => rand(),
-			'gross_amount' => 94000, // no decimal allowed for creditcard
+			'order_id' 			=> $member->factur,
+			'gross_amount' 	=> $grossamount, // no decimal allowed for creditcard
 		);
 
-		// Optional
-		$item1_details = array(
-			'id' => 'a1',
-			'price' => 18000,
-			'quantity' => 3,
-			'name' => "Apple"
-		);
+		$item_details = [];
+		foreach ($cartByMember as $item) {
+			$item_details[] = [
+				'id' 					=> $item['book_id'],
+				'price' 			=> $item['price'],
+				'quantity' 		=> $item['qty'],
+				'name' 				=> word_limiter($item['title'], 3, '...')
+			];
+		}
 
 		// Optional
-		$item2_details = array(
-			'id' => 'a2',
-			'price' => 20000,
-			'quantity' => 2,
-			'name' => "Orange"
-		);
+		// $item1_details = array(
+		// 	'id' => 'a1',
+		// 	'price' => 18000,
+		// 	'quantity' => 3,
+		// 	'name' => "Apple"
+		// );
+
+		// // Optional
+		// $item2_details = array(
+		// 	'id' => 'a2',
+		// 	'price' => 20000,
+		// 	'quantity' => 2,
+		// 	'name' => "Orange"
+		// );
 
 		// Optional
-		$item_details = array($item1_details, $item2_details);
+		//$item_details = array($item1_details, $item2_details);
 
 		// Optional
+
+
 		$billing_address = array(
-			'first_name'    => "Andri",
-			'last_name'     => "Litani",
-			'address'       => "Mangga 20",
+			'first_name'    => $member->first_name,
+			'last_name'     => $member->last_name,
+			'address'       => "Jl KH Dahlan NO 75 Enigma Camp",
 			'city'          => "Jakarta",
 			'postal_code'   => "16602",
 			'phone'         => "081122334455",
@@ -75,9 +92,9 @@ class Snap extends CI_Controller
 
 		// Optional
 		$shipping_address = array(
-			'first_name'    => "Obet",
-			'last_name'     => "Supriadi",
-			'address'       => "Manggis 90",
+			'first_name'    => $member->first_name,
+			'last_name'     => $member->last_name,
+			'address'       => "Jl KH Dahlan NO 75 Enigma Camp",
 			'city'          => "Jakarta",
 			'postal_code'   => "16601",
 			'phone'         => "08113366345",
@@ -86,9 +103,9 @@ class Snap extends CI_Controller
 
 		// Optional
 		$customer_details = array(
-			'first_name'    => "Andri",
-			'last_name'     => "Litani",
-			'email'         => "andri@litani.com",
+			'first_name'    => $member->first_name,
+			'last_name'     => $member->last_name,
+			'email'         => $member->email,
 			'phone'         => "081122334455",
 			'billing_address'  => $billing_address,
 			'shipping_address' => $shipping_address
@@ -103,7 +120,7 @@ class Snap extends CI_Controller
 		$custom_expiry = array(
 			'start_time' => date("Y-m-d H:i:s O", $time),
 			'unit' => 'minute',
-			'duration'  => 2
+			'duration'  => 20
 		);
 
 		$transaction_data = array(
@@ -123,8 +140,51 @@ class Snap extends CI_Controller
 	public function finish()
 	{
 		$result = json_decode($this->input->post('result_data'));
-		echo 'RESULT <br><pre>';
-		var_dump($result);
-		echo '</pre>';
+		$getRowByMember = $this->Transaction->getCartByMember(9)->row();
+
+		// echo 'RESULT <br><pre>';
+		// var_dump($result);
+		// echo '</pre>';
+
+		// atur nya disin ketika sudah memilih pembayaran menggunakan apa
+		// tiap nilai balikan beda-beda ya jadi harus di tentukan pake apa
+
+		// bca, bni dan bri 
+		if ($result->payment_type == 'bank_transfer') {
+			// cek bank yang ada va_numbernya
+			if (@$result->va_numbers) {
+				foreach ($result->va_numbers as $vaNum) {
+					$bank 			= $vaNum->bank;
+					$vaNumber 	= $vaNum->va_number;
+					$billerCode =  '';
+				}
+			} else {
+				$bank 			= 'permata';
+				$vaNumber		= $result->permata_va_number;
+				$billerCode	= '';
+			}
+		}
+		// bank mandiri
+		elseif ($result->payment_type == 'echannel') {
+			$bank 			= 'mandiri';
+			$vaNumber 	= $result->bill_key;
+			$billerCode =  $result->biller_code;
+		}
+
+		$dataInput = [
+			'factur' 							=> $getRowByMember->factur,
+			'payment_type'				=> $result->payment_type,
+			'bank'								=> $bank,
+			'va_number'						=> $vaNumber,
+			'biller_code' 				=> $billerCode,   // khusus bank mandiri
+			'transaction_status'	=> $result->transaction_status,
+			'transaction_time'		=> $result->transaction_time,
+			'pdf_url'							=> $result->pdf_url,
+			'date_created'				=> time(),
+			'date_modified'				=> time()
+		];
+
+		$this->Transaction->saveTransactionFromMidtrans($dataInput);
+		redirect('orders');
 	}
 }

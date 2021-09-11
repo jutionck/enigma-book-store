@@ -50,22 +50,13 @@ class Transaction_book extends CI_Controller
     redirect('cart');
   }
 
-  public function checkout()
-  {
-    $data = [
-      'title'   => 'Pembayaran'
-    ];
-    $page = '/transaction/checkout';
-    pageBackend('member', $page, $data);
-  }
-
   public function checkoutProcess()
   {
     $post = $this->input->post();
     $data = [
       'factur'      => $post['factur'],
       'date'        => date('Y-m-d'),
-      'member_id'   => 10,
+      'member_id'   => 9,
       'grand_total' => $post['grand_total'],
       'total_bayar' => $post['total_bayar'],
       'status'      => 0
@@ -78,7 +69,7 @@ class Transaction_book extends CI_Controller
         'factur'      => $post['factur'],
         'book_id'     => $item['id'],
         'price'       => $item['price'],
-        'qty'         => $data['qty' . $i++]
+        'qty'         => $item['qty']
       ];
       $this->Transaction->saveTransactionDetail($detailTransaction);
     }
@@ -87,13 +78,27 @@ class Transaction_book extends CI_Controller
     } else {
       $this->session->set_flashdata('error', 'Pesanan gagal di proses....');
     }
+    $this->cart->destroy();
     redirect('checkout');
+  }
+
+  public function checkout()
+  {
+    $data = [
+      'title'   => 'Pembayaran',
+      'carts'   => $this->Transaction->getCartByMember(9)->result_array(),
+      'cart'    => $this->Transaction->getCartByMember(9)->row()
+    ];
+    $page = '/transaction/checkout';
+    pageBackend('member', $page, $data);
   }
 
   public function myOrder()
   {
     $data = [
-      'title'   => 'Pesanan Saya'
+      'title'   => 'Pesanan Saya',
+      'carts'   => $this->Transaction->getCartByMember(9)->result_array(),
+      'cart'    => $this->Transaction->getCartByMemberStatus(9)->row()
     ];
     $page = '/transaction/myorder';
     pageBackend('member', $page, $data);

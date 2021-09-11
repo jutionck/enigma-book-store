@@ -9,7 +9,7 @@
               <h4 class="text-danger mb-4 font-weight-bold">Pengiriman</h4>
               <h5 class="text-info">Tujuan Pengiriman</h5>
               <p>
-                Jution Candra Kirana
+                <?= $cart->first_name ?> <?= $cart->last_name ?>
                 <br>
                 Jl Taman Aries Tirta
                 Jl Taman Aries Tirta Blok H3 No 12 Ujung
@@ -40,14 +40,13 @@
 
           <div class="row">
             <?php $i = 1;
-            foreach ($this->cart->contents() as $items) :
-              $image = $this->Book_model->findBookById($items['id']);
+            foreach ($carts as $items) :
             ?>
               <div class="col-md-3">
-                <img src="<?= $image->image ?>" class="img-fluid mb-3" alt="Responsive image">
+                <img src="<?= $items['image'] ?>" class="img-fluid mb-3" alt="Responsive image">
               </div>
               <div class="col-md-9">
-                <div class="text-primary"><?= $items['name'] ?></div>
+                <div class="text-primary"><?= $items['title'] ?></div>
                 <div class="small text-gray-500">Rp<?= number_format(($items['price']), 2) ?></div>
                 <div class="row no-gutters align-items-center mt-4">
                   <div class="col mr-2">
@@ -74,10 +73,10 @@
                   </div>
                 </div>
                 <div class="col-auto text-danger">
-                  Rp. <?php echo $this->cart->format_number($this->cart->total()); ?>
+                  Rp. <?php echo $this->cart->format_number($cart->grand_total); ?>
                 </div>
               </div>
-              <button type="button" class="btn btn-success btn-lg btn-block mt-3">Bayar Sekarang</button>
+              <button type="button" class="btn btn-success btn-lg btn-block mt-3" id="tombol-bayar" data-amount="<?= $cart->grand_total; ?>">Bayar Sekarang</button>
             </div>
           </div>
         </div>
@@ -85,11 +84,61 @@
     </div>
   </div>
 </div>
-
 <form id="payment-form" method="post" action="<?= site_url() ?>/snap/finish">
   <input type="hidden" name="result_type" id="result-type" value=""></div>
   <input type="hidden" name="result_data" id="result-data" value=""></div>
 </form>
 
+
 <script type="text/javascript" src="https://app.sandbox.midtrans.com/snap/snap.js" data-client-key="SB-Mid-client-txTPsq3JcRYcOoBt"></script>
 <script src="//ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script>
+
+<script>
+  $('#tombol-bayar').click(function(event) {
+    var grossamount = $(this).data('amount');
+    event.preventDefault();
+    $(this).attr("disabled", "disabled");
+    $.ajax({
+      url: '<?= site_url() ?>/snap/token',
+      cache: false,
+      data: {
+        grossamount: grossamount
+      },
+      success: function(data) {
+        //location = data;
+
+        console.log('token = ' + data);
+
+        var resultType = document.getElementById('result-type');
+        var resultData = document.getElementById('result-data');
+
+        function changeResult(type, data) {
+          $("#result-type").val(type);
+          $("#result-data").val(JSON.stringify(data));
+          //resultType.innerHTML = type;
+          //resultData.innerHTML = JSON.stringify(data);
+        }
+
+        snap.pay(data, {
+
+          onSuccess: function(result) {
+            changeResult('success', result);
+            console.log(result.status_message);
+            console.log(result);
+            $("#payment-form").submit();
+          },
+          onPending: function(result) {
+            changeResult('pending', result);
+            console.log(result.status_message);
+            $("#payment-form").submit();
+          },
+          onError: function(result) {
+            changeResult('error', result);
+            console.log(result.status_message);
+            $("#payment-form").submit();
+          }
+        });
+      }
+    });
+  });
+</script>

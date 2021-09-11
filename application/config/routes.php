@@ -50,20 +50,23 @@ defined('BASEPATH') or exit('No direct script access allowed');
 |		my-controller/my-method	-> my_controller/my_method
 */
 
-$route['book']                    = 'book';
-$route['book/add_cart']           = 'book/cart';
-$route['book/detail/(:any)']      = 'book/detail/$1';
+$route['book']                        = 'book';
+$route['book/add_cart']               = 'book/cart';
+$route['book/detail/(:any)']          = 'book/detail/$1';
 
-$route['cart']                    = 'transaction_book';
-$route['cart/delete/(:any)']      = 'transaction_book/delete/$1';
-$route['cart/update']             = 'transaction_book/update';
+$route['cart']                        = 'transaction_book';
+$route['cart/delete/(:any)']          = 'transaction_book/delete/$1';
+$route['cart/update']                 = 'transaction_book/update';
+$route['checkout']                    = 'transaction_book/checkout';
+$route['checkout/process']            = 'transaction_book/checkoutProcess';
+$route['cart/clear']                  = 'transaction_book/clear';
 
-// day two
-$route['cart/clear']              = 'transaction_book/clear';
-$route['checkout']                = 'transaction_book/checkout';
-$route['checkout/process']        = 'transaction_book/checkoutProcess';
-$route['myorder']                 = 'transaction_book/myOrder';
+$route['orders']                      = 'transaction_book/myOrder';
 
-$route['default_controller']      = 'welcome';
+$route['admin/orders']                = 'admin_transaction';
+$route['admin/orders/detail/(:any)']  = 'admin_transaction/detail/$1';
+$route['admin/orders/refresh']        = 'admin_transaction/refresh';
+
+$route['default_controller']      = 'welcome'; //nama file controller
 $route['404_override'] = '';
 $route['translate_uri_dashes'] = FALSE;
