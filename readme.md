@@ -19,7 +19,7 @@
 ![alt text](https://github.com/jutionck/enigma-book-store/blob/integration-midtrans/gambar-gambar/member-checkout.png)
 
 ##### 6. Halaman Member Melakukan Pembayaran
-![alt text]()
+![alt text](https://github.com/jutionck/enigma-book-store/blob/integration-midtrans/gambar-gambar/member-bayar.png)
 
 ##### 7. Halaman Member Lihat Pesanan
 ![alt text](https://github.com/jutionck/enigma-book-store/blob/integration-midtrans/gambar-gambar/member-pesanan-saya.png)
@@ -28,4 +28,4 @@
 ![alt text](https://github.com/jutionck/enigma-book-store/blob/integration-midtrans/gambar-gambar/admin-order.png)
 
 ##### 9. Halaman Admin Lihat Detail Pesanan
-![alt text]()
+![alt text](https://github.com/jutionck/enigma-book-store/blob/integration-midtrans/gambar-gambar/admin-detail-order.png)
